@@ -109,7 +109,7 @@ class _ProductDetailScreenState
           const SizedBox(height: 12),
 
           Text(
-            '\$${product.price.toStringAsFixed(2)}',
+            '\RM ${product.price.toStringAsFixed(2)}',
             style: Theme.of(context)
                 .textTheme
                 .headlineSmall
