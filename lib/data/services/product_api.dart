@@ -41,7 +41,6 @@ class ProductApi {
     );
   }
 
-  // 👇 TAMBAH METHOD INI DI SINI
   Future<Product> getProductById(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/products/$id'),
@@ -54,5 +53,34 @@ class ProductApi {
     final data = jsonDecode(response.body);
 
     return Product.fromJson(data);
+  }
+
+  // Search products using DummyJSON search endpoint
+  Future<ProductPage> searchProducts({
+    required String query,
+    int limit = 20,
+    int skip = 0,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl/products/search?q=${Uri.encodeQueryComponent(query)}'
+        '&limit=$limit&skip=$skip',
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to search products');
+    }
+
+    final data = jsonDecode(response.body);
+
+    final List products = data['products'];
+
+    return ProductPage(
+      products: products
+          .map((json) => Product.fromJson(json))
+          .toList(),
+      total: data['total'],
+    );
   }
 }
